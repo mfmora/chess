@@ -12,11 +12,11 @@ class Board
       if index_row <= 1 || index_row >= 6
         chess_row = []
         (0...8).each do |column_row|
-          chess_row << Piece.new([index_row,column_row])
+          chess_row << Piece.new([index_row,column_row], self, :white, :K)
         end
         chess[index_row] = chess_row
       else
-        chess[index_row] = Array.new(8){nil}
+        chess[index_row] = Array.new(8){NullPiece.instance}
       end
     end
     chess
