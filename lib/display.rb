@@ -39,9 +39,16 @@ class Display
     position.inject(:+) % 2 == 0 ? COLORS[:even] : COLORS[:odd]
   end
 
-  def move(times = 10)
+  def move(times = 100)
+    positions = []
     while times > 0
-      @cursor.get_input
+      pos = @cursor.get_input
+      positions << pos unless pos.nil?
+
+      if positions.count == 2
+        @board.move_piece(positions[0],positions[1])
+        positions = []
+      end
       render
       times -= 1
     end

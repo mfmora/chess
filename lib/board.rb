@@ -76,7 +76,12 @@ class Board
     self[end_pos] = piece
     piece.position = end_pos
 
-
+  rescue ArgumentError => e
+    puts "#{e.message}\n"
+    sleep(1)
+  rescue NoMethodError => e
+    puts "Invalid input\n"
+    sleep(1)
   end
 
   def prompt_user
@@ -93,6 +98,28 @@ class Board
     retry
   end
 
+  def get_all_pieces(color)
+    @grid.select {|piece| piece.color == color}
+  end
 
+  def find_piece(class_name,color)
+    @grid.select {|piece| piece.color == color && piece.is_a?(class_name)}
+  end
 
+  def opposite_color(color)
+    color == :white ? :black : :white
+  end
+
+  def in_check?(color)
+    king = find_piece(King,color)
+
+    get_all_pieces(opposite_color(color)).each do |piece|
+      return true if piece.moves.include?(king.position)
+    end
+    false
+  end
+
+  def checkmate?(color)
+    in_check?(color) && valid_moves.nil? #to be implemented
+  end
 end
