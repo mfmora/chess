@@ -34,7 +34,8 @@ class Board
 
   def in_bounds?(pos)
     x, y = pos
-    x < 8 && y < 8
+    x < 8 && y < 8 &&
+    x >= 0 && y >= 0
   end
 
   def move_piece(start_pos,end_pos)

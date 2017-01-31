@@ -22,6 +22,7 @@ class Display
       puts "|\n"
       puts "--------------------------------"
     end
+    puts "\n"
   end
 
   def move(times = 10)
