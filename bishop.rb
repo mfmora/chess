@@ -1,5 +1,5 @@
 require_relative "piece.rb"
-
+require_relative "sliding_piece.rb"
 
 class Bishop < Piece
   include SlidingPiece
@@ -9,7 +9,7 @@ class Bishop < Piece
   end
 
   def move_dirs
-    
+    :diagonal
   end
 
 
