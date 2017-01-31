@@ -16,8 +16,8 @@ class Board
 
 
   attr_reader :grid
-  def initialize
-    @grid = make_starting_grid
+  def initialize(grid = make_starting_grid)
+    @grid = grid
   end
 
   def make_starting_grid
@@ -99,11 +99,15 @@ class Board
   end
 
   def get_all_pieces(color)
-    @grid.select {|piece| piece.color == color}
+    @grid.flatten.select {|piece| piece.color == color}
+  end
+
+  def get_pieces
+    @grid.flatten.reject {|piece| piece.is_a?(NullPiece)}
   end
 
   def find_piece(class_name,color)
-    @grid.select {|piece| piece.color == color && piece.is_a?(class_name)}
+    @grid.flatten.select {|piece| piece.color == color && piece.is_a?(class_name)}
   end
 
   def opposite_color(color)
@@ -119,7 +123,25 @@ class Board
     false
   end
 
+  def empty_space?(position)
+    self[position].is_a?(NullPiece)
+  end
+
   def checkmate?(color)
-    in_check?(color) && valid_moves.nil? #to be implemented
+    in_check?(color) && valid_moves?(color) #to be implemented
+  end
+
+  def valid_moves?(color)
+
+  end
+
+  def deep_dup
+    dup_board = Board.new(Array.new(8){ Array.new(8){ NullPiece.instance}})
+    get_pieces.each do |piece|
+      position, color, piece_class = piece.position.dup, piece.color, piece.class
+
+      dup_board[position] = piece_class.new(position, dup_board, color)
+    end
+    dup_board
   end
 end

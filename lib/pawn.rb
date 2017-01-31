@@ -20,7 +20,7 @@ class Pawn < Piece
     end
     vertical_moves.each do |diff_x,diff_y|
       new_pos = [x + diff_x, y + diff_y]
-      positions << new_pos if empty_space?(new_pos)
+      positions << new_pos if @board.empty_space?(new_pos)
     end
     positions
   end

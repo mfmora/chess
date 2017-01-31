@@ -18,10 +18,10 @@ class Piece
   end
 
   def opponent_piece?(new_pos)
-    different_color?(new_pos) && !empty_space?(new_pos)
+    different_color?(new_pos) && !@board.empty_space?(new_pos)
   end
 
-  def empty_space?(new_pos)
-    @board[new_pos].is_a?(NullPiece)
+  def move_into_check?(end_pos)
+    dup_board = @board.deep_dup
   end
 end
