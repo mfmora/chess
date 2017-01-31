@@ -35,16 +35,15 @@ module SlidingPiece
       new_position = [x_diff + x, y_diff + y]
 
       # wall or piece of other color | stop in piece of different color
-      while @board.in_bounds?(new_position) && @board[new_position].color != color
+      while @board.in_bounds?(new_position) && different_color(new_position)
         positions << new_position
+        break unless @board[new_position].is_a?(NullPiece) #check that this is working
+
         old_x, old_y = new_position
         new_position = [x_diff + old_x, y_diff + old_y]
       end
-
-      #if @board[new_position].color != 
-
     end
 
-    positions.reject {|pos| @board[pos].color == self.color}
+    positions
   end
 end

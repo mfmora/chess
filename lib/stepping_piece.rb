@@ -31,8 +31,10 @@ module SteppingPiece
       x_diff, y_diff = diff
       x, y = self.position
       new_position = [x_diff + x, y_diff + y]
-
-      positions << new_position if @board.in_bounds?(new_position)
+      
+      if @board.in_bounds?(new_position) && different_color(new_position)
+        positions << new_position
+      end
     end
 
     positions.reject {|pos| @board[pos].color == self.color}

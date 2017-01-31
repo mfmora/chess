@@ -1,5 +1,3 @@
-require_relative "board.rb"
-
 class Piece
 
   attr_accessor :position, :board, :color, :symbol
@@ -15,5 +13,7 @@ class Piece
     symbol
   end
 
-
+  def different_color?(new_pos)
+    @board[new_pos].color != @color
+  end
 end

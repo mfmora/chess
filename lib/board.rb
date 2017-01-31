@@ -1,7 +1,21 @@
-require_relative 'piece.rb'
+require_relative 'piece_helper.rb'
 require_relative 'nullpiece.rb'
 require 'byebug'
 class Board
+
+  PIECES_BY_INDEX = {
+    0 => [Rook,Knight,Bishop,King,Queen,Bishop,Knight,Rook],
+    1 => [Pawn]*8,
+    2 => nil,
+    3 => nil,
+    4 => nil,
+    5 => nil,
+    6 => [Pawn]*8,
+    7 => [Rook,Knight,Bishop,King,Queen,Bishop,Knight,Rook]
+  }
+  COLORS = [:white, :black]
+
+
   attr_reader :grid
   def initialize
     @grid = make_starting_grid
@@ -10,17 +24,23 @@ class Board
   def make_starting_grid
     chess = Array.new(8)
     chess.each_index do |index_row|
-      if index_row <= 1 || index_row >= 6
-        chess_row = []
-        (0...8).each do |column_row|
-          chess_row << Piece.new([index_row,column_row], self, :white, :K)
-        end
-        chess[index_row] = chess_row
-      else
-        chess[index_row] = Array.new(8){NullPiece.instance}
-      end
+      chess[index_row] = row_pieces(PIECES_BY_INDEX[index_row],index_row,color_by_index(index_row))
     end
     chess
+  end
+
+  def color_by_index(index)
+    index < 2 ? COLORS[0] : COLORS[1]
+  end
+
+  def row_pieces(pieces, index_row, color)
+    return Array.new(8){NullPiece.instance} if pieces.nil?
+
+    chess_row = []
+    pieces.each_with_index do |piece, index_column|
+      chess_row << piece.new([index_row, index_column], self, color)
+    end
+    chess_row
   end
 
   def [](pos)
