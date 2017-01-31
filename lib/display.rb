@@ -4,9 +4,9 @@ require_relative 'board.rb'
 class Display
 
   COLORS = {
-    color: :white,
-    background: :cyan,
-    selected: :magenta
+    selected: :magenta,
+    even: :light_white,
+    odd: :light_black
   }
 
   attr_reader :cursor
@@ -21,22 +21,22 @@ class Display
       row.each_with_index do |piece, column_index|
         printed = piece.is_a?(NullPiece) ? " " : "#{piece.to_s}"
 
-        piece_color = {color: piece.color, background: COLORS[:background]}
-        selected_color = {color: piece.color, background: COLORS[:selected]}
+        piece_color = {background: back_color([row_index,column_index])}
+        selected_color = {background: COLORS[:selected]}
 
         if @cursor.cursor_pos == [row_index,column_index]
-          print "|".colorize(COLORS) +
-          " #{printed} ".colorize(selected_color)
+          print " #{printed} ".colorize(selected_color)
         else
-          print "|".colorize(COLORS) +
-          " #{printed} ".colorize(piece_color)
+          print " #{printed} ".colorize(piece_color)
         end
       end
-      print "|".colorize(COLORS)
       puts " \n"
-      puts "---------------------------------".colorize(COLORS)
     end
     puts " \n"
+  end
+
+  def back_color(position)
+    position.inject(:+) % 2 == 0 ? COLORS[:even] : COLORS[:odd]
   end
 
   def move(times = 10)
@@ -46,4 +46,9 @@ class Display
       times -= 1
     end
   end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  board = Board.new
+  display = Display.new(board)
 end

@@ -16,4 +16,12 @@ class Piece
   def different_color?(new_pos)
     @board[new_pos].color != @color
   end
+
+  def opponent_piece?(new_pos)
+    different_color?(new_pos) && !empty_space?(new_pos)
+  end
+
+  def empty_space?(new_pos)
+    @board[new_pos].is_a?(NullPiece)
+  end
 end

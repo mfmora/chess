@@ -4,16 +4,15 @@ require 'byebug'
 class Board
 
   PIECES_BY_INDEX = {
-    0 => [Rook,Knight,Bishop,King,Queen,Bishop,Knight,Rook],
+    0 => [Rook,Knight,Bishop,Queen,King,Bishop,Knight,Rook],
     1 => [Pawn]*8,
     2 => nil,
     3 => nil,
     4 => nil,
     5 => nil,
     6 => [Pawn]*8,
-    7 => [Rook,Knight,Bishop,King,Queen,Bishop,Knight,Rook]
+    7 => [Rook,Knight,Bishop,Queen,King,Bishop,Knight,Rook]
   }
-  COLORS = [:white, :black]
 
 
   attr_reader :grid
@@ -30,7 +29,7 @@ class Board
   end
 
   def color_by_index(index)
-    index < 2 ? COLORS[0] : COLORS[1]
+    index < 2 ? :black : :white
   end
 
   def row_pieces(pieces, index_row, color)
@@ -60,15 +59,20 @@ class Board
   end
 
   def move_piece(start_pos,end_pos)
+
     unless in_bounds?(start_pos) && in_bounds?(end_pos)
       raise ArgumentError.new("one of those spaces isn't on the grid!")
     end
-    if self[start_pos].nil?
+    if self[start_pos].is_a?(NullPiece)
       raise ArgumentError.new("no piece in the start position")
     end
 
+    unless self[start_pos].moves.include?(end_pos)
+      raise ArgumentError.new("You can't move your piece to that position")
+    end
+
     piece = self[start_pos]
-    self[start_pos] = nil
+    self[start_pos] = NullPiece.instance
     self[end_pos] = piece
     piece.position = end_pos
 
