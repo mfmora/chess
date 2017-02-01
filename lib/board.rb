@@ -61,17 +61,22 @@ class Board
   def move_piece(start_pos,end_pos)
 
     unless in_bounds?(start_pos) && in_bounds?(end_pos)
-      raise ArgumentError.new("one of those spaces isn't on the grid!")
+      raise ArgumentError.new("You're trying to move beyond the grid! We are not going to allow that!")
     end
     if self[start_pos].is_a?(NullPiece)
-      raise ArgumentError.new("no piece in the start position")
-    end
-
-    unless self[start_pos].moves.include?(end_pos)
-      raise ArgumentError.new("You can't move your piece to that position")
+      raise ArgumentError.new("Your start position is an empty piece!")
     end
 
     piece = self[start_pos]
+
+    unless piece.valid_moves.include?(end_pos)
+      if piece.move_into_check?(end_pos)
+        raise ArgumentError.new("Don't do that move!!! You are going to be in check!")
+      else
+        raise ArgumentError.new("The move is invalid")
+      end
+    end
+
     self[start_pos] = NullPiece.instance
     self[end_pos] = piece
     piece.position = end_pos
@@ -82,6 +87,26 @@ class Board
   rescue NoMethodError => e
     puts "Invalid input\n"
     sleep(1)
+  end
+
+  def move_piece!(start_pos,end_pos)
+
+    unless in_bounds?(start_pos) && in_bounds?(end_pos)
+      raise ArgumentError.new("You're trying to move beyond the grid! We are not going to allow that!")
+    end
+    if self[start_pos].is_a?(NullPiece)
+      raise ArgumentError.new("Your start position is an empty piece!")
+    end
+    piece = self[start_pos]
+    unless piece.moves.include?(end_pos)
+      raise ArgumentError.new("The move is invalid")
+    end
+
+
+
+    self[start_pos] = NullPiece.instance
+    self[end_pos] = piece
+    piece.position = end_pos
   end
 
   def prompt_user
