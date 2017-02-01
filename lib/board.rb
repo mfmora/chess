@@ -98,26 +98,22 @@ class Board
     retry
   end
 
-  def get_all_pieces(color)
+  def get_pieces(color)
     @grid.flatten.select {|piece| piece.color == color}
   end
 
-  def get_pieces
+  def get_all_pieces
     @grid.flatten.reject {|piece| piece.is_a?(NullPiece)}
   end
 
   def find_piece(class_name,color)
-    @grid.flatten.select {|piece| piece.color == color && piece.is_a?(class_name)}
-  end
-
-  def opposite_color(color)
-    color == :white ? :black : :white
+    @grid.flatten.find {|piece| piece.color == color && piece.is_a?(class_name)}
   end
 
   def in_check?(color)
     king = find_piece(King,color)
-
-    get_all_pieces(opposite_color(color)).each do |piece|
+    debugger if king.nil?
+    get_pieces(king.opposite_color).each do |piece|
       return true if piece.moves.include?(king.position)
     end
     false
@@ -132,12 +128,12 @@ class Board
   end
 
   def valid_moves?(color)
-
+    get_pieces(color).any? { |piece| piece.valid_moves.any?}
   end
 
   def deep_dup
     dup_board = Board.new(Array.new(8){ Array.new(8){ NullPiece.instance}})
-    get_pieces.each do |piece|
+    get_all_pieces.each do |piece|
       position, color, piece_class = piece.position.dup, piece.color, piece.class
 
       dup_board[position] = piece_class.new(position, dup_board, color)

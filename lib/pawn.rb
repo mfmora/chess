@@ -16,11 +16,11 @@ class Pawn < Piece
     x, y = position
     diagonal_moves.each do |diff_x,diff_y|
       new_pos = [x + diff_x, y + diff_y]
-      positions << new_pos if opponent_piece?(new_pos)
+      positions << new_pos if opponent_piece?(new_pos) && @board.in_bounds?(new_pos)
     end
     vertical_moves.each do |diff_x,diff_y|
       new_pos = [x + diff_x, y + diff_y]
-      positions << new_pos if @board.empty_space?(new_pos)
+      positions << new_pos if @board.empty_space?(new_pos) && @board.in_bounds?(new_pos)
     end
     positions
   end
